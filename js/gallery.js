@@ -64,3 +64,43 @@ const images = [
       },
     ];
     
+    const gallery = document.querySelector('.gallery');
+    
+    function galleryTemplate(item){
+        return `<li class="gallery-item" >
+            <a class="gallery-link" href="${item.original}">
+                <img
+                class="gallery-image"
+                src="${item.preview}"
+                data-source="${item.original}"
+                alt="${item.description}"
+                width=360
+                height=200
+                />
+                </a>
+        </li>`;
+    }
+    function galleryListTemplate(images){
+        const markup = images.map(galleryTemplate).join('');
+        return markup;
+    }
+    function render(){
+        const markup = galleryListTemplate(images);
+        gallery.innerHTML = markup;
+    }
+    render()
+
+
+
+    gallery.addEventListener('click', e => {
+        e.preventDefault();
+        if(e.target === e.currentTarget) return;
+        const clickImage = e.target.dataset.source;
+        const instance = basicLightbox.create(`
+        <img src="${clickImage}">
+    `)
+        
+        instance.show();
+        
+    });
+    
