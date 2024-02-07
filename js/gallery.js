@@ -91,22 +91,30 @@ const images = [
     render()
 
 
-
-    gallery.addEventListener('click', e => {
+    gallery.addEventListener('click',modalShow)
+    function modalShow(e) {
         e.preventDefault();
         if(e.target === e.currentTarget) return;
         const clickImage = e.target.dataset.source;
         const instance = basicLightbox.create(`
         <img src="${clickImage}">
-    `)
+        `, {
+            onShow: instance => {
+                window.addEventListener('keydown', closeEvent),
+                window.removeEventListener('click',modalShow)},
+            onClose: instance => {
+                window.removeEventListener('keydown', closeEvent),
+                gallery.addEventListener('click',modalShow)}
+        })
         
         instance.show();
-        window.addEventListener('keydown', e => {
+        
+        function closeEvent(e) {
             if (e.code === 'Escape'){
                 instance.close();
-                window.removeEventListener();
-            }
-        });
-        
-    });
+                window.removeEventListener('keydown', closeEvent);
+            };
+        };
+    
+    };
     
